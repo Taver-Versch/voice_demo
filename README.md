@@ -16,7 +16,7 @@ Part of the UNL SoC Yao project. Licensed under Apache 2.0, see LICENSE.
 
 Open http://localhost:5000.
 
-Console will list the address if 5000 is already used on your device.
+> If port 5000 is already in use, Flask will stop with an error. On a Mac this is usually AirPlay Receiver: turn it off in System Settings > General > AirDrop & Handoff, or change the port at the bottom of app.py (and in the cloudflared command below).
 
 ## Run for headsets
 WebXR and microphone access need HTTPS. Install cloudflared first:
