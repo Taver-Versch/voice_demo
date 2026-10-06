@@ -1,0 +1,138 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a-scene {
+  position: fixed;
+  inset: 0;
+  visibility: hidden;
+}
+
+.a-fullscreen a-scene {
+  visibility: visible;
+}
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.layout {
+  display: flex;
+  gap: 1rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1rem 1rem;
+}
+
+.transcript-panel {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid rgb(100, 100, 100);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(200, 200, 200);
+}
+
+#status-light {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+
+#status-label {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+#transcript {
+  height: 60vh;
+  overflow-y: auto;
+}
+
+#transcript:empty::before {
+  content: "Transcripts will appear here.";
+  display: block;
+  padding-top: 0.5rem;
+  color: rgb(140, 140, 140);
+}
+
+.transcript-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+.transcript-badge {
+  flex: none;
+  align-self: flex-start;
+  width: 5rem;
+  padding: 0.15rem 0;
+  font-size: 0.8rem;
+  text-align: center;
+  background-color: rgb(214, 234, 248);
+}
+
+.menu {
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: rgb(200, 200, 200);
+}
+
+.menu-button {
+  min-height: 3rem;
+  background-color: rgb(100, 100, 100);
+  color: rgb(255, 255, 255);
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  filter: brightness(1.4);
+}
+
+#listen-button {
+  min-height: 5rem;
+  background-color: rgb(30, 132, 73);
+}
+
+#listen-button.listening {
+  background-color: rgb(100, 100, 100);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem;
+  background-color: rgb(100, 100, 100);
+  color: rgb(255, 255, 255);
+}
+
+.field select {
+  padding: 0.4rem;
+  border: none;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column-reverse;
+  }
+
+  .menu {
+    width: auto;
+  }
+}

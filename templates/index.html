@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Demo</title>
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script type="module" src="/static/js/hand_controller_dynamic_switch.js"></script>
+    <script type="module" src="/static/js/app.js"></script>
+
+    <link rel="stylesheet" href="/static/css/app.css" />
+  </head>
+
+  <body>
+    <h1 class="title">Voice Demo</h1>
+
+    <main class="layout">
+      <section class="transcript-panel">
+        <div class="status">
+          <div id="status-light"></div>
+          <span id="status-label"></span>
+        </div>
+        <div id="transcript"></div>
+      </section>
+
+      <aside class="menu">
+        <button id="listen-button" class="menu-button">Start Listening</button>
+        <button id="enter-vr-button" class="menu-button">Enter VR</button>
+
+        <label class="field">
+          Mode
+          <select id="mode-select">
+            <option value="both" selected>Wake + STT</option>
+            <option value="wake">Wake word only</option>
+            <option value="stt">STT only</option>
+          </select>
+        </label>
+
+        <label class="field">
+          Wake word engine
+          <select id="wake-select">
+            <option value="tfjs" selected>TensorFlow.js</option>
+            <option value="openwakeword">openWakeWord</option>
+          </select>
+        </label>
+
+        <label class="field">
+          Speech-to-text engine
+          <select id="stt-select">
+            <option value="moonshine" selected>Moonshine</option>
+            <option value="whisper-tiny">Whisper tiny</option>
+          </select>
+        </label>
+      </aside>
+    </main>
+
+    <a-scene
+      embedded
+      background="color: #36454F"
+      webxr="optionalFeatures: hand-tracking"
+      xr-mode-ui="enabled: false"
+      keyboard-shortcuts="enterVR: false"
+    >
+      <a-camera wasd-controls="enabled: false">
+        <a-cursor raycaster="objects: .clickable"></a-cursor>
+      </a-camera>
+      <a-entity id="leftHand" hand-tracking-controls="hand: left"></a-entity>
+      <a-entity id="rightHand" hand-tracking-controls="hand: right"></a-entity>
+
+      <a-entity position="0 1.7 -2" scale="1.4 1.4 1.4">
+        <a-plane width="1.6" height="1.5" position="0 -0.15 0" color="#c8c8c8"></a-plane>
+
+        <a-circle id="vr-status-light" radius="0.08" position="-0.65 0.45 0.01"></a-circle>
+        <a-text id="vr-status-label" position="-0.5 0.45 0.01" width="1.6" color="#000"></a-text>
+
+        <a-plane width="1.4" height="0.9" position="0 -0.13 0.01" color="#fff"></a-plane>
+        <a-text class="vr-transcript-line" position="-0.67 0.3 0.02" baseline="top" wrap-count="45" width="1.34" color="#000"></a-text>
+        <a-plane width="1.36" height="0.005" position="0 0.17 0.02" color="#c8c8c8"></a-plane>
+        <a-text class="vr-transcript-line" position="-0.67 0.15 0.02" baseline="top" wrap-count="45" width="1.34" color="#000"></a-text>
+        <a-plane width="1.36" height="0.005" position="0 0.02 0.02" color="#c8c8c8"></a-plane>
+        <a-text class="vr-transcript-line" position="-0.67 0 0.02" baseline="top" wrap-count="45" width="1.34" color="#000"></a-text>
+        <a-plane width="1.36" height="0.005" position="0 -0.13 0.02" color="#c8c8c8"></a-plane>
+        <a-text class="vr-transcript-line" position="-0.67 -0.15 0.02" baseline="top" wrap-count="45" width="1.34" color="#000"></a-text>
+        <a-plane width="1.36" height="0.005" position="0 -0.28 0.02" color="#c8c8c8"></a-plane>
+        <a-text class="vr-transcript-line" position="-0.67 -0.3 0.02" baseline="top" wrap-count="45" width="1.34" color="#000"></a-text>
+        <a-plane width="1.36" height="0.005" position="0 -0.43 0.02" color="#c8c8c8"></a-plane>
+        <a-text class="vr-transcript-line" position="-0.67 -0.45 0.02" baseline="top" wrap-count="45" width="1.34" color="#000"></a-text>
+
+        <a-plane id="vr-listen-button" class="clickable" position="-0.36 -0.73 0.01" width="0.66" height="0.2" color="#1e8449">
+          <a-text id="vr-listen-label" value="Start Listening" position="0 0 0.01" width="1.4" color="#fff" align="center"></a-text>
+        </a-plane>
+        <a-plane id="vr-exit-button" class="clickable" position="0.36 -0.73 0.01" width="0.66" height="0.2" color="#646464">
+          <a-text value="Exit VR" position="0 0 0.01" width="1.4" color="#fff" align="center"></a-text>
+        </a-plane>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>

@@ -16,9 +16,16 @@ Part of the UNL SoC Yao project. Licensed under Apache 2.0, see LICENSE.
 
 Open http://localhost:5000.
 
+Console will list the address if 5000 is already used on your device.
+
 ## Run for headsets
-WebXR and microphone access need HTTPS:
+WebXR and microphone access need HTTPS. Install cloudflared first:
+
+    winget install Cloudflare.cloudflared    (Windows)
+    brew install cloudflared                 (Mac)
+
+Then, with the app running:
 
     cloudflared tunnel --url http://localhost:5000
 
-Open the printed https://*.trycloudflare.com URL on Vision Pro or Quest, grant mic access, then tap Enter VR.
+Open the printed https://*.trycloudflare.com URL on Vision Pro or Quest. Press Start Listening and allow microphone access, then tap Enter VR. Enter VR does nothing on a laptop or desktop.
