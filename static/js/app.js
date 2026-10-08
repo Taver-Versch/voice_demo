@@ -121,6 +121,7 @@ async function recordAndTranscribe(id) {
   if (!audio || id !== sessionId) return;
   const startTime = performance.now();
   const text = await sttEngine.transcribe(audio);
+  if (!text) return;
   addTranscriptLine(text, `${Math.round(performance.now() - startTime)} ms`);
 }
 
