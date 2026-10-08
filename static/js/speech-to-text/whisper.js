@@ -1,4 +1,15 @@
-// Dan: speech-to-text engine. app.js calls these:
-// - init(): load the model (runs on every Start, so cache it).
-// - transcribe(audio): audio is a 16 kHz mono Float32Array of one phrase
-//   (app.js records it and cuts on silence); return the text as a string.
+const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js";
+const MODEL = "onnx-community/whisper-tiny.en";
+
+let recognizer;
+
+export async function init() {
+  if (recognizer) return;
+  const { pipeline } = await import(TRANSFORMERS_URL);
+  recognizer = await pipeline("automatic-speech-recognition", MODEL);
+}
+
+export async function transcribe(audio) {
+  const { text } = await recognizer(audio);
+    return text.replace(/\[[^\]]*\]|\([^)]*\)/g, "").trim();
+}
