@@ -51,6 +51,20 @@ a-scene {
   font-weight: bold;
 }
 
+#meter {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 3rem;
+  margin-left: auto;
+}
+
+#meter span {
+  width: 2.5px;
+  height: 10%;
+  background-color: #2606dc;
+}
+
 #transcript {
   height: 60vh;
   overflow-y: auto;
