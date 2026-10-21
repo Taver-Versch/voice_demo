@@ -135,6 +135,10 @@ a-scene {
   color: rgb(255, 255, 255);
 }
 
+#wake-hint:empty {
+  display: none;
+}
+
 .field select {
   padding: 0.4rem;
   border: none;

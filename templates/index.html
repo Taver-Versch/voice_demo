@@ -41,15 +41,17 @@
         <label class="field">
           Wake word engine
           <select id="wake-select">
-            <option value="tfjs" selected>TensorFlow.js</option>
-            <option value="openwakeword">openWakeWord</option>
+            <option value="openwakeword" selected>openWakeWord</option>
+            <option value="tfjs">TensorFlow.js</option>
           </select>
+          <span id="wake-hint"></span>
         </label>
 
         <label class="field">
           Speech-to-text engine
           <select id="stt-select">
-            <option value="moonshine" selected>Moonshine</option>
+            <option value="moonshine-base" selected>Moonshine base</option>
+            <option value="moonshine-tiny">Moonshine tiny</option>
             <option value="whisper-tiny">Whisper tiny</option>
           </select>
         </label>

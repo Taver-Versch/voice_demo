@@ -1,10 +1,11 @@
 import * as wakeTfjs from "./wakeword/tensor-flow.js";
 import * as wakeOpenwakeword from "./wakeword/open-wake-word.js";
-import * as sttMoonshine from "./speech-to-text/moonshine.js";
+import * as sttMoonshineTiny from "./speech-to-text/moonshine-tiny.js";
+import * as sttMoonshineBase from "./speech-to-text/moonshine-base.js";
 import * as sttWhisper from "./speech-to-text/whisper.js";
 
 const wakeEngines = { tfjs: wakeTfjs, openwakeword: wakeOpenwakeword };
-const sttEngines = { moonshine: sttMoonshine, "whisper-tiny": sttWhisper };
+const sttEngines = { "moonshine-tiny": sttMoonshineTiny, "moonshine-base": sttMoonshineBase, "whisper-tiny": sttWhisper };
 
 const STATES = {
   idle: { label: "Idle", color: "#4b5563" },
@@ -30,6 +31,7 @@ const enterVrButton = document.querySelector("#enter-vr-button");
 const modeSelect = document.querySelector("#mode-select");
 const wakeSelect = document.querySelector("#wake-select");
 const sttSelect = document.querySelector("#stt-select");
+const wakeHint = document.querySelector("#wake-hint");
 const statusLight = document.querySelector("#status-light");
 const statusLabel = document.querySelector("#status-label");
 const transcript = document.querySelector("#transcript");
@@ -62,6 +64,7 @@ let mic = null;
 let vrSupported = false;
 const recentLines = [];
 const engineLoads = new Map();
+let preloadId = 0;
 
 navigator.xr?.isSessionSupported("immersive-vr").then((supported) => (vrSupported = supported));
 
@@ -91,9 +94,17 @@ function loadEngine(engine) {
   return engineLoads.get(engine);
 }
 
+function showWakePhrase() {
+  const phrase = wakeEngines[wakeSelect.value].WAKE_PHRASE;
+  wakeHint.textContent = phrase && modeSelect.value !== "stt" ? `Say "${phrase}"` : "";
+}
+
 function preloadEngines() {
-  loadEngine(wakeEngines[wakeSelect.value]).catch(() => {});
-  loadEngine(sttEngines[sttSelect.value]).catch(() => {});
+  const id = ++preloadId;
+  if (!isListening) setState("loading");
+  Promise.allSettled([loadEngine(wakeEngines[wakeSelect.value]), loadEngine(sttEngines[sttSelect.value])]).then(() => {
+    if (id === preloadId && !isListening) setState("idle");
+  });
 }
 
 function addTranscriptLine(text, badgeText) {
@@ -291,6 +302,7 @@ listenButton.addEventListener("click", toggleListening);
 vrListenButton.addEventListener("click", toggleListening);
 [modeSelect, wakeSelect, sttSelect].forEach((select) =>
   select.addEventListener("change", () => {
+    showWakePhrase();
     preloadEngines();
     restartListening();
   }),
@@ -301,4 +313,5 @@ enterVrButton.addEventListener("click", () => {
 vrExitButton.addEventListener("click", () => scene.exitVR());
 
 setState("idle");
+showWakePhrase();
 preloadEngines();
