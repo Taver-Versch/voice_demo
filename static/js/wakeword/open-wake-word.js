@@ -47,14 +47,15 @@ export function init() {
 }
 
 export async function start(onDetected) {
+  const self = {};
+  listener = self;
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  if (listener !== self) return stream.getTracks().forEach((track) => track.stop());
   const context = new AudioContext({ sampleRate: 16000 });
   const processor = context.createScriptProcessor(1024, 1, 1);
   context.createMediaStreamSource(stream).connect(processor);
   processor.connect(context.destination);
-
-  const self = { stream, context, processor };
-  listener = self;
+  Object.assign(self, { stream, context, processor });
   let pending = new Float32Array(MEL_CONTEXT);
   let melFrames = [];
   let embeddings = [];
@@ -89,9 +90,10 @@ export async function start(onDetected) {
 }
 
 export function stop() {
-  if (!listener) return;
-  listener.processor.onaudioprocess = null;
-  listener.stream.getTracks().forEach((track) => track.stop());
-  listener.context.close();
+  if (listener?.processor) {
+    listener.processor.onaudioprocess = null;
+    listener.stream.getTracks().forEach((track) => track.stop());
+    listener.context.close();
+  }
   listener = null;
 }

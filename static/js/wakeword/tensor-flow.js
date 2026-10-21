@@ -9,6 +9,7 @@ const CONFIDENCE = 0.75;
 
 let ready, recognizer;
 let stopping = Promise.resolve();
+let wanted = false;
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -33,7 +34,9 @@ export function init() {
 }
 
 export async function start(onDetected) {
+  wanted = true;
   await stopping;
+  if (!wanted) return;
   const wakeIndex = recognizer.wordLabels().indexOf(WAKE_WORD);
   let lastDetection = 0;
   await recognizer.listen(
@@ -47,5 +50,6 @@ export async function start(onDetected) {
 }
 
 export function stop() {
+  wanted = false;
   if (recognizer?.isListening()) stopping = recognizer.stopListening();
 }

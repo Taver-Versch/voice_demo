@@ -21,6 +21,7 @@ const SILENCE_MS = 400;
 const NO_SPEECH_MS = 3000;
 const MAX_CLIP_MS = 5000;
 const PRE_ROLL_MS = 1000;
+const WAKE_PAUSE_MS = 500;
 const CHUNK_SIZE = 2048;
 const LEAD_IN_CHUNKS = 4;
 const METER_BARS = 32;
@@ -175,7 +176,7 @@ function closeMic(oldMic) {
   showLevels([]);
 }
 
-function recordPhrase(id) {
+function recordPhrase(id, minMs) {
   const activeMic = mic;
   const chunks = [...activeMic.recent];
   const sampleRate = activeMic.context.sampleRate;
@@ -195,7 +196,8 @@ function recordPhrase(id) {
       }
       const quietFor = now - lastSpeechTime;
       const tooLong = now - startTime > MAX_CLIP_MS;
-      if (samples && id === sessionId && !tooLong && quietFor < (heardSpeech ? SILENCE_MS : NO_SPEECH_MS)) return;
+      const tooSoon = now - startTime < minMs;
+      if (samples && id === sessionId && !tooLong && (tooSoon || quietFor < (heardSpeech ? SILENCE_MS : NO_SPEECH_MS))) return;
       activeMic.onSamples = null;
       activeMic.recent = [];
       if (!samples || !heardSpeech) return resolve(null);
@@ -221,8 +223,8 @@ async function toModelAudio(chunks, sampleRate) {
   return (await resampler.startRendering()).getChannelData(0);
 }
 
-async function recordAndTranscribe(id) {
-  const phrase = await recordPhrase(id);
+async function recordAndTranscribe(id, minMs = 0) {
+  const phrase = await recordPhrase(id, minMs);
   if (!phrase || id !== sessionId) return;
   const audio = await toModelAudio(phrase.chunks, phrase.sampleRate);
   const text = await sttEngine.transcribe(audio);
@@ -237,7 +239,7 @@ async function transcribeLoop(id) {
 async function onWakeWord(id) {
   wakeEngine.stop();
   setState("heard");
-  await recordAndTranscribe(id);
+  await recordAndTranscribe(id, WAKE_PAUSE_MS);
   if (id !== sessionId) return;
   setState("listening");
   wakeEngine.start(() => onWakeWord(id).catch((error) => stopWithError(id, error)));
